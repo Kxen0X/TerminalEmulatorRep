@@ -8,37 +8,18 @@
 #include <map>
 #include <algorithm>
 #include <filesystem>
-
-
+#include <chrono>
+#include "dir.h"
+#include "cd.h"
+#include "mkdir.h"
 
 std::wstring current_command;
-std::wstring current_directory = L"\\";
-
-void dir(std::vector<std::wstring> directories) {
-	if (directories.size() != 0) {
-		for (std::wstring directory : directories) {
-			if (!std::filesystem::exists(directory)) {
-				std::wcout << "Syntactical error in file name, folder name, or volume label\n";
-				continue;
-			}
-			for (const auto entry : std::filesystem::directory_iterator(directory)) {
-				if (entry.is_directory()) {
-					std::wcout << entry.last_write_time() << "\t\t" << L"<DIR>\t\t" << entry.path().filename() << std::endl;
-				}
-			}
-		}
-	}
-	else {
-		for (const auto entry : std::filesystem::directory_iterator(current_directory)) {
-			if (entry.is_directory()) {
-				std::wcout << entry.last_write_time() << "\t\t" << L"<DIR>\t\t" << entry.path().filename() << std::endl;
-			}
-		}
-	}
-}
+std::wstring current_directory = LR"(\)";
 
 
-std::map<std::wstring, void(*)(std::vector<std::wstring>)> commands{ {L"dir", dir} };
+
+
+std::map<std::wstring, void(*)(std::vector<std::wstring>&)> commands{ {L"dir", dir}, {L"cd", cd}, {L"mkdir", mkdir}};
 
 int main() {
 	_setmode(_fileno(stdout), _O_U16TEXT);
@@ -63,7 +44,6 @@ int main() {
 			commands[cmd](line);
 		}
 		else{
-			
 			std::wcout << std::format(L"\"{}\" is not recognized as internal or external command, executable program or batch file.\n", cmd);
 	}
 		std::wcout << current_directory + L">";
