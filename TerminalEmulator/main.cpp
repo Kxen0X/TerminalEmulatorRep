@@ -12,14 +12,15 @@
 #include "dir.h"
 #include "cd.h"
 #include "mkdir.h"
+#include "rmdir.h"
 
 std::wstring current_command;
 std::wstring current_directory = LR"(\)";
 
+// реализовать cls, rmdir, help
 
 
-
-std::map<std::wstring, void(*)(std::vector<std::wstring>&)> commands{ {L"dir", dir}, {L"cd", cd}, {L"mkdir", mkdir}};
+std::map<std::wstring, void(*)(std::vector<std::wstring>&)> commands{ {L"dir", dir}, {L"cd", cd}, {L"mkdir", mkdir}, {L"rmdir", rmdir} };
 
 int main() {
 	_setmode(_fileno(stdout), _O_U16TEXT);

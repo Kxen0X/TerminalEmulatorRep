@@ -128,11 +128,13 @@
     <ClCompile Include="dir.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mkdir.cpp" />
+    <ClCompile Include="rmdir.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cd.h" />
     <ClInclude Include="dir.h" />
     <ClInclude Include="mkdir.h" />
+    <ClInclude Include="rmdir.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
