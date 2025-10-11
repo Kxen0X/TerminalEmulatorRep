@@ -11,7 +11,7 @@ void cd(std::vector<std::wstring>& new_directory) {
 	
 
 	if (new_directory.size() == 1) {
-
+		std::replace(new_directory[0].begin(), new_directory[0].end(), L'/', L'\\');
 		if (new_directory[0][0] == std::wstring(L"\\")[0] && std::filesystem::exists(new_directory[0])) {
 			new_directory[0] == L"\\.." || new_directory[0] == L"\\." ? current_directory = L"\\" : current_directory = new_directory[0];
 			
@@ -31,6 +31,7 @@ void cd(std::vector<std::wstring>& new_directory) {
 	else if (new_directory.size() > 1){
 		std::wstring tmp;
 		for (std::wstring& el : new_directory) {
+			std::replace(el.begin(), el.end(), L'/', L'\\');
 			tmp += L" " + el;
 		}
 		tmp = tmp.substr(1, tmp.size());

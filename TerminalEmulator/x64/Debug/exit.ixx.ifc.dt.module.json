@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "x64\\Debug\\exit.obj",
+            "outputs": [
+                "x64\\Debug\\exit.ixx.ifc.dt.module.json",
+                "x64\\Debug\\exit.ixx.ifc.dt.d.json",
+                "x64\\Debug\\exit.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "exit",
+                    "source-path": "c:\\users\\user\\desktop\\cpp\\terminalemulator\\terminalemulator\\exit.ixx",
+                    "is-interface": true
+                }
+            ],
+            "requires": []
+        }
+    ]
+}
