@@ -1,13 +1,14 @@
 # Terminal Emulator Prototype
 
-A small Windows console project for learning command parsing, dispatch, and filesystem access in C++. The current implementation recognizes one built-in command, `dir`, and lists subdirectories of the requested path.
+A small Windows console project for learning command parsing, dispatch, and filesystem access in C++. The final version implements seven built-in commands for navigation, directory management, console clearing, and help.
 
 ## What is implemented
 
 - A prompt and line-based input loop.
 - Tokenization of commands and arguments with `std::wistringstream`.
 - Command dispatch through a map of function pointers.
-- Directory traversal with `std::filesystem`.
+- File and directory listings, directory navigation, creation, and removal through `std::filesystem`.
+- Case-insensitive command dispatch and separate source files for each command.
 - UTF-16 input/output mode for the Windows console.
 - An error message for unknown commands.
 
@@ -32,7 +33,7 @@ From the repository root, in an x64 Native Tools Command Prompt for Visual Studi
 
 ```bat
 mkdir build-local
-cl /nologo /EHsc /std:c++latest /FIformat /Fo:build-local\terminal.obj /Fe:build-local\terminal.exe TerminalEmulator\main.cpp
+cl /nologo /EHsc /std:c++latest /FIformat /Fo:build-local\ /Fe:build-local\terminal.exe TerminalEmulator\main.cpp TerminalEmulator\dir.cpp TerminalEmulator\cd.cpp TerminalEmulator\mkdir.cpp TerminalEmulator\rmdir.cpp TerminalEmulator\cls.cpp TerminalEmulator\exit.cpp TerminalEmulator\help.cpp
 build-local\terminal.exe
 ```
 
@@ -40,33 +41,28 @@ This project uses Windows-specific headers and `_setmode`; it is not currently a
 
 ## Usage
 
-At the application's prompt:
+The prompt tracks its own current-directory string, initially `\` (the current drive's root).
 
-```text
-dir
-dir C:\Windows
-dir C:\Windows C:\Users
-```
+| Command | Action |
+| --- | --- |
+| `dir [path ...]` | List files and directories, with timestamps |
+| `cd path` | Change the application's current directory |
+| `mkdir name ...` | Create directories under the current directory |
+| `rmdir path ...` | Remove empty directories |
+| `cls` | Clear the console |
+| `help` | Show the built-in command descriptions |
+| `exit` | Exit the application |
 
-- `dir` lists subdirectories under the current drive's root (`\`).
-- One or more arguments select directories to inspect.
-- Output contains subdirectory names and last-write timestamps. Regular files are currently omitted.
-- Unknown commands produce an error message.
-
-Close the console window to exit. A built-in `exit` command is not implemented.
+For a read-only first look, run `help`, `dir`, and then `exit`. Test directory-changing commands in a disposable folder. Command names are normalized to lowercase.
 
 ## Source map
 
-The implementation is in [TerminalEmulator/main.cpp](TerminalEmulator/main.cpp):
-
-- `commands` maps command names to handlers.
-- `dir()` enumerates directories.
-- `main()` reads, splits, and dispatches input.
+[TerminalEmulator/main.cpp](TerminalEmulator/main.cpp) handles input and dispatch. Each command has a matching `.cpp`/`.h` pair in [TerminalEmulator](TerminalEmulator), including `dir`, `cd`, `mkdir`, `rmdir`, `cls`, `exit`, and `help`.
 
 [TerminalEmulator.vcxproj](TerminalEmulator/TerminalEmulator.vcxproj) contains the Visual Studio project settings.
 
 ## Current limitations
 
-Only lowercase `dir` is recognized. There is no `cd`, quoted-path parsing, command history, piping, or process execution. Paths containing spaces are split into separate arguments. Blank input is not checked before indexing the token list, and filesystem exceptions are not handled; either can terminate the program.
+There is no general quoted-argument parser, command history, piping, or external-process execution. `cd` has custom handling for multiple tokens, but path behavior is not consistent across commands. Blank input is not checked before indexing the token list, and filesystem exceptions are not handled; either can terminate the program.
 
 Natural next steps are robust input handling, explicit error reporting, quoted arguments, and additional built-in commands.
